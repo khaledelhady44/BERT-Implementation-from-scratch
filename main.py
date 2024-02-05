@@ -1,4 +1,5 @@
 from torch.utils.data import DataLoader
+from embedding import BERTEmbedding
 from dataset import BERTDataset
 from transformers import BertTokenizer
 from bert_tokenizer import get_bert_tokenizer
@@ -42,7 +43,18 @@ if __name__ == "__main__":
         get_bert_tokenizer(data)
         tokenizer = BertTokenizer.from_pretrained("./bert-it-1/bert-it-vocab.txt", local_files_only = True)
     
+    vocab_size = tokenizer.vocab_size
+    embedding_size = 768
+
     dataset = BERTDataset(data, tokenizer, context_window)
+    train_loader = DataLoader(
+        dataset, batch_size=32, shuffle = True, pin_memory=True
+    )
+
+    embeddings = BERTEmbedding(vocab_size, embedding_size, context_window)
+    sample = next(iter(train_loader))
+
+    print(embeddings(sample["input"], sample["segment_label"]).shape)
 
     
 
