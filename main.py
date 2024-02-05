@@ -1,4 +1,5 @@
 from dataset import BERTDataset
+from bert_tokenizer import get_bert_tokenizer
 
 def get_data():
     corpus_movie_conv = './datasets/movie_conversations.txt'
@@ -30,3 +31,5 @@ def get_data():
 
 if __name__ == "__main__":
     data = get_data()
+    tokenizer = get_bert_tokenizer(data)
+    print(tokenizer.vocab)
