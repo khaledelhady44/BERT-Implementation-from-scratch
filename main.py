@@ -41,9 +41,8 @@ if __name__ == "__main__":
     except FileNotFoundError:
         get_bert_tokenizer(data)
         tokenizer = BertTokenizer.from_pretrained("./bert-it-1/bert-it-vocab.txt", local_files_only = True)
-
     
-    
+    dataset = BERTDataset(data, tokenizer, context_window)
 
     
 
