@@ -1,4 +1,6 @@
+from torch.utils.data import DataLoader
 from dataset import BERTDataset
+from transformers import BertTokenizer
 from bert_tokenizer import get_bert_tokenizer
 
 def get_data():
@@ -30,6 +32,18 @@ def get_data():
     return pairs
 
 if __name__ == "__main__":
+    context_window = 64
+
     data = get_data()
-    tokenizer = get_bert_tokenizer(data)
-    print(tokenizer.vocab)
+
+    try:
+        tokenizer = BertTokenizer.from_pretrained("./bert-it-1/bert-it-vocab.txt", local_files_only = True)
+    except FileNotFoundError:
+        get_bert_tokenizer(data)
+        tokenizer = BertTokenizer.from_pretrained("./bert-it-1/bert-it-vocab.txt", local_files_only = True)
+
+    
+    
+
+    
+

@@ -1,7 +1,6 @@
 import os
 from pathlib import Path
 from tokenizers import BertWordPieceTokenizer
-from transformers import BertTokenizer
 import tqdm
 
 MAX_LEN = 64
@@ -40,6 +39,5 @@ def get_bert_tokenizer(pairs):
 
     os.makedirs("./bert-it-1", exist_ok = True)
     tokenizer.save_model("./bert-it-1", "bert-it")
-    tokenizer = BertTokenizer.from_pretrained("./bert-it-1/bert-it-vocab.txt", local_files_only = True)
     
-    return tokenizer
+    
