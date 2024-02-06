@@ -1,10 +1,9 @@
-import torch
 from torch.utils.data import DataLoader
 from embedding import BERTEmbedding
 from dataset import BERTDataset
 from transformers import BertTokenizer
 from bert_tokenizer import get_bert_tokenizer
-from bert import MultiHeadedAttention
+from bert import BERT
 
 def get_data():
     corpus_movie_conv = './datasets/movie_conversations.txt'
@@ -55,10 +54,8 @@ if __name__ == "__main__":
 
     embeddings = BERTEmbedding(vocab_size, embedding_size, context_window)
     sample = next(iter(train_loader))
-    x = embeddings(sample["input"], sample["segment_label"])
-
-    attention = MultiHeadedAttention(12, x.shape[2])
-    print(attention(x, x, x, torch.ones(x.shape[0], 12 , 64, 64)).shape)
-
+    bert = BERT(2, 12, 768, vocab_size)
+    # print(sample["input"].shape, sample["segment_label"].shape)
+    print(bert(sample["input"], sample["segment_label"]).shape)
     
 
