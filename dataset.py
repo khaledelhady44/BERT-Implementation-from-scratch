@@ -129,9 +129,9 @@ class BERTDataset(Dataset):
                 sentence_modified.extend([0] * len(tokenized_word))
             
             # make sure that label has same size as input
-            assert len(sentence_modified) == len(sentence_modified)
+        assert len(sentence_modified) == len(sentence_modified)
 
-            return sentence_modified, sentence_label
+        return sentence_modified, sentence_label
         
     def get_pair(self, item):
         """returns 2 sentences from the data."""
