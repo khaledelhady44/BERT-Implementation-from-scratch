@@ -69,6 +69,7 @@ class BERT(torch.nn.Module):
     def __init__(self, n_layers, n_heads, d_model, vocab_size, dropout = 0.1):
         super().__init__()
 
+        self.d_model = d_model
         self.embedding = BERTEmbedding(vocab_size, d_model)
         self.encoder_blocks = torch.nn.ModuleList(
             [Encoder(n_heads, d_model, dropout) for _ in range(n_layers)]
