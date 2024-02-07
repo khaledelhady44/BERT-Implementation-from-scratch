@@ -71,7 +71,7 @@ class BERTTrainer:
     weight_decay = 0.01,
     betas = (0.9, 0.999),
     warmup_steps = 10000,
-    log_freq = 10,
+    log_freq = 100,
     device = "cuda"):
         self.device = device
         self.model = model
