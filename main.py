@@ -1,9 +1,11 @@
+import torch
 from torch.utils.data import DataLoader
 from embedding import BERTEmbedding
 from dataset import BERTDataset
 from transformers import BertTokenizer
 from bert_tokenizer import get_bert_tokenizer
 from bert import BERT
+from pretraining import BERTLM, BERTTrainer
 
 def get_data():
     corpus_movie_conv = './datasets/movie_conversations.txt'
@@ -37,6 +39,7 @@ if __name__ == "__main__":
     context_window = 64
 
     data = get_data()
+    MAX_LEN = 64
 
     try:
         tokenizer = BertTokenizer.from_pretrained("./bert-it-1/bert-it-vocab.txt", local_files_only = True)
@@ -45,17 +48,28 @@ if __name__ == "__main__":
         tokenizer = BertTokenizer.from_pretrained("./bert-it-1/bert-it-vocab.txt", local_files_only = True)
     
     vocab_size = tokenizer.vocab_size
-    embedding_size = 768
+    embedding_size = 64
 
-    dataset = BERTDataset(data, tokenizer, context_window)
-    train_loader = DataLoader(
-        dataset, batch_size=32, shuffle = True, pin_memory=True
+    train_data = BERTDataset(
+        data, context_window = MAX_LEN, tokenizer = tokenizer
     )
 
-    embeddings = BERTEmbedding(vocab_size, embedding_size, context_window)
-    sample = next(iter(train_loader))
-    bert = BERT(2, 12, 768, vocab_size)
-    # print(sample["input"].shape, sample["segment_label"].shape)
-    print(bert(sample["input"], sample["segment_label"]).shape)
-    
+    train_loader = DataLoader(
+    train_data, batch_size = 32, shuffle = True, pin_memory = True)
+
+    bert_model = BERT(
+    vocab_size = len(tokenizer.vocab),
+    d_model = 64,
+    n_layers = 1,
+    n_heads = 2,
+    dropout = 0.1)
+
+    bert_lm = BERTLM(bert_model, len(tokenizer.vocab))
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    bert_trainer = BERTTrainer(bert_lm , train_loader, device = device)
+    epochs = 1
+
+
+    for epoch in range(epochs):
+        bert_trainer.train(epoch)
 
